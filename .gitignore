@@ -1,1 +1,11 @@
+# Build directory
 build
+
+# Debian
+debian/libmetrics*
+debian/metrics-dev*
+debian/files
+debian/tmp/
+
+# Compiled files
+obj-x86_64-linux-gnu/
