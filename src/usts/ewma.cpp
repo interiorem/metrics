@@ -28,7 +28,7 @@ auto ewma<Clock>::add(time_point time, double value) -> void {
         const auto delta = std::chrono::duration_cast<std::chrono::nanoseconds>(time - prev).count();
         const auto alpha = delta / tau;
         const auto mu = std::exp(-alpha);
-        average = mu * average + (1 - mu) * value;
+        average = mu * value + (1 - mu) * average;
     } else {
         average = value;
         birthstamp = time;
