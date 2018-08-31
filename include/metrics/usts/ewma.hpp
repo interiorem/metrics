@@ -65,8 +65,16 @@ public:
     /// \param value Observed value.
     auto add(time_point time, double value) -> void;
 
-    /// Returns the moving average result.
+    /// Returns the moving average result using current time.
     auto get() const -> double;
+
+    /// Returns the moving average result using time.
+    ///
+    /// \param time Time point. Must be monotonically increased comparing with previously added values.
+    auto get(time_point time) const -> double;
+
+private:
+    auto calculate_alpha(time_point time) const -> double;
 };
 
 // TODO: use steady_clock since it is expected that timer is monotonic.
