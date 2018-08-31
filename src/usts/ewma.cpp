@@ -20,15 +20,8 @@ auto ewma<Clock>::add(double value) -> void {
 
 template<typename Clock>
 auto ewma<Clock>::add(time_point time, double value) -> void {
-    if (time < prev) {
-        throw std::invalid_argument("time argument must monotonically increase");
-    }
-
     if (initialized.test_and_set()) {
-        const auto delta = std::chrono::duration_cast<std::chrono::nanoseconds>(time - prev).count();
-        const auto alpha = delta / tau;
-        const auto mu = std::exp(-alpha);
-        average = mu * average + (1 - mu) * value;
+        average = get_with(time, value);
     } else {
         average = value;
         birthstamp = time;
@@ -40,6 +33,23 @@ auto ewma<Clock>::add(time_point time, double value) -> void {
 template<typename Clock>
 auto ewma<Clock>::get() const -> double {
     return average;
+}
+
+template<typename Clock>
+auto ewma<Clock>::get_with(double value) const -> double {
+    return get_with(clock_type::now(), value);
+}
+
+template<typename Clock>
+auto ewma<Clock>::get_with(time_point time, double value) const -> double {
+    if (time < prev) {
+        throw std::invalid_argument("time argument must monotonically increase");
+    }
+
+    const auto delta = std::chrono::duration_cast<std::chrono::nanoseconds>(time - prev).count();
+    const auto alpha = delta / tau;
+    const auto mu = std::exp(-alpha);
+    return mu * average + (1 - mu) * value;
 }
 
 template<typename Clock>

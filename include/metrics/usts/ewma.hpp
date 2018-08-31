@@ -67,6 +67,17 @@ public:
 
     /// Returns the moving average result.
     auto get() const -> double;
+
+    /// Calculate a moving average with some value using current time.
+    ///
+    /// \param value Observed value.
+    auto get_with(double value) const -> double;
+
+    /// Calculate a moving average with some value using time.
+    ///
+    /// \param time Time point. Must be monotonically increased comparing with previously added values.
+    /// \param value Observed value.
+    auto get_with(time_point time, double value) const -> double;
 };
 
 // TODO: use steady_clock since it is expected that timer is monotonic.
